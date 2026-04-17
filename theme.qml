@@ -1,4 +1,6 @@
-import QtQuick 2.0
+import QtQuick 2.15
+import QtQuick.Shapes 1.15
+import QtGraphicalEffects 1.15
 import QtMultimedia 5.9
 import "components"
 
@@ -83,16 +85,20 @@ FocusScope {
 		fillMode: Image.PreserveAspectFit
 	}
 
-	Image {
-		id: vignette
-		source: "assets/images/vignette.png"
-		anchors.fill: parent
-		fillMode: Image.PreserveAspectCrop
-	}
-	Text {
-		text: "Hello World"
-		color: "white"
-	}
+	// Image {
+	// 	id: vignette
+	// 	source: "assets/images/vignette.png"
+	// 	anchors.fill: parent
+	// 	fillMode: Image.PreserveAspectCrop
+	// }
+	// Text {
+	// 	text: "Hello World"
+	// 	color: "white"
+	// }
+
+    AnimatedRings {}
+
+
 	RadialGameMenu{
 		id: radialMenu
         anchors.fill: parent
