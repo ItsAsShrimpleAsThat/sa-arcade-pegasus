@@ -114,6 +114,8 @@ FocusScope {
         // Opacity tuning
         selectedOpacity: 1.0
         unselectedOpacity: 0.42
+		wheelVelocity: 6
+		wheelMaxEasingTime: 100
 
         onCurrentIndexChangedByUser: function(index) {
             api.memory.set("radialIndex", index)

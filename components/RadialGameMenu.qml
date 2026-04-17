@@ -7,6 +7,11 @@ FocusScope {
     property var model: null
 
     property int currentIndex: 0
+
+    // Unwrapped target position of the wheel
+    property real targetVisualIndex: currentIndex
+
+    // Actual animated visual position
     property real visualIndex: currentIndex
 
     property real selectedAngleDegrees: 270
@@ -31,6 +36,11 @@ FocusScope {
     property bool launchOnAccept: true
     property bool useLogoFirst: true
 
+    property real wheelVelocity: 8
+    property int wheelDuration: -1
+    property int wheelMaxEasingTime: 120
+    property int wheelReversingMode: SmoothedAnimation.Immediate
+
     signal currentIndexChangedByUser(int index)
     signal gameActivated(var game)
 
@@ -38,11 +48,19 @@ FocusScope {
     readonly property real centerY: height * centerYRatio
     readonly property real radius: (width * radiusRatio) / 2
 
+    readonly property int visualSelectedIndex: wrapIndex(Math.round(visualIndex))
+
     Behavior on visualIndex {
-        NumberAnimation {
-            duration: 180
-            easing.type: Easing.InOutQuad
-        }
+    SmoothedAnimation {
+        velocity: root.wheelVelocity
+        duration: root.wheelDuration
+        maximumEasingTime: root.wheelMaxEasingTime
+        reversingMode: root.wheelReversingMode
+    }
+}
+
+    onTargetVisualIndexChanged: {
+        visualIndex = targetVisualIndex;
     }
 
     function modelCount() {
@@ -59,7 +77,7 @@ FocusScope {
         var count = modelCount();
         if (count <= 0)
             return 0;
-        return (i % count + count) % count;
+        return ((i % count) + count) % count;
     }
 
     function setCurrentIndex(i) {
@@ -71,7 +89,7 @@ FocusScope {
         var diff = shortestSignedDistance(currentIndex, wrapped, count);
 
         currentIndex = wrapped;
-        visualIndex = visualIndex + diff;
+        targetVisualIndex = targetVisualIndex + diff;
     }
 
     function nextGame() {
@@ -80,7 +98,7 @@ FocusScope {
             return;
 
         currentIndex = wrapIndex(currentIndex + 1);
-        visualIndex = visualIndex + 1;
+        targetVisualIndex = targetVisualIndex + 1;
         currentIndexChangedByUser(currentIndex);
     }
 
@@ -90,7 +108,7 @@ FocusScope {
             return;
 
         currentIndex = wrapIndex(currentIndex - 1);
-        visualIndex = visualIndex - 1;
+        targetVisualIndex = targetVisualIndex - 1;
         currentIndexChangedByUser(currentIndex);
     }
 
@@ -127,11 +145,15 @@ FocusScope {
     }
 
     function shortestSignedDistance(fromIndex, toIndex, count) {
+        if (count <= 0)
+            return 0;
+
         var diff = toIndex - fromIndex;
-        if (diff > count / 2)
+        diff = ((diff % count) + count) % count;
+
+        if (diff >= count / 2)
             diff -= count;
-        if (diff < -count / 2)
-            diff += count;
+
         return diff;
     }
 
@@ -140,10 +162,10 @@ FocusScope {
             return 0;
 
         var diff = toIndex - fromIndex;
-        diff = ((diff % count) + count) % count;   // wrap to [0, count)
+        diff = ((diff % count) + count) % count;
 
         if (diff >= count / 2)
-            diff -= count;                         // shift to [-count/2, count/2)
+            diff -= count;
 
         return diff;
     }
@@ -180,7 +202,7 @@ FocusScope {
 
         delegate: Item {
             property int total: root.modelCount()
-            property bool selected: index === root.currentIndex
+            property bool selected: index === root.visualSelectedIndex
 
             property real relativeIndex: root.shortestSignedDistanceReal(root.visualIndex, index, total)
 
@@ -203,16 +225,16 @@ FocusScope {
             z: selected ? 1000 : (1000 - Math.abs(relativeIndex))
 
             Behavior on scale {
-                NumberAnimation {
-                    duration: 180
-                    easing.type: Easing.InOutQuad
+                SmoothedAnimation {
+                    velocity: 6
+                    maximumEasingTime: 100
                 }
             }
 
             Behavior on opacity {
-                NumberAnimation {
-                    duration: 180
-                    easing.type: Easing.InOutQuad
+                SmoothedAnimation {
+                    velocity: 6
+                    maximumEasingTime: 100
                 }
             }
 
