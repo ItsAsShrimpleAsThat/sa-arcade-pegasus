@@ -98,9 +98,22 @@ FocusScope {
         anchors.fill: parent
         model: api.collections.get(0).games
         currentIndex: api.memory.get("radialIndex") || 0
-        radius: 300
-        itemSize: 170
         visibleCount: 9
+
+		selectedAngleDegrees: 45	
+
+        // Move circle center
+        centerXRatio: 0
+        centerYRatio: 0
+
+        radiusRatio: 0.75
+		selectedScale: 1
+		unselectedScale: 0.5
+		baseItemSizeRatio: 0.25
+
+        // Opacity tuning
+        selectedOpacity: 1.0
+        unselectedOpacity: 0.42
 
         onCurrentIndexChangedByUser: function(index) {
             api.memory.set("radialIndex", index)
