@@ -26,7 +26,7 @@ FocusScope {
     property real centerYRatio: 0.5
 
     // 0.5 = circle diameter is half the screen width
-    property real radiusRatio: 0.5
+    property real radiusRatio: 0.8
 
     property real baseItemSizeRatio: 0.12
     readonly property real baseItemSize: width * baseItemSizeRatio

@@ -60,7 +60,7 @@ Item {
         anchors.bottomMargin: 40
         anchors.rightMargin: -50
         anchors.leftMargin: 130
-        width: 650
+        width: root.width*0.8
         anchors.right: parent.right
 
         Text {
