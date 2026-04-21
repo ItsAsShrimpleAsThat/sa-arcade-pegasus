@@ -158,8 +158,8 @@ Item {
 
     Shape {
         id: outerRingContainer
-        width: 1400 
-        height: 1400
+        width: parent.width *1.5
+        height: parent.height *1.5
         x: -width / 2
         y: -height / 2
         antialiasing: false
@@ -220,8 +220,8 @@ Item {
 
     Shape {
         id: middleRingContainer
-        width: 1200
-        height: 1200
+        width: parent.width *0.8
+        height: parent.width *0.8
         x: -width / 2
         y: -height / 2
         antialiasing: false
@@ -276,8 +276,8 @@ Item {
 
     Shape {
         id: ringContainer
-        width: 1000 
-        height: 1000
+        width: parent.width *1.05
+        height: parent.height *1.05
         x: -width / 2
         y: -height / 2 // This centers it perfectly
         antialiasing: false
