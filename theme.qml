@@ -7,8 +7,6 @@ import "components"
 FocusScope {
 	id: root
 	
-	FontLoader { id: regular; source: "assets/fonts/NotoSans-Regular.ttf" }
-	FontLoader { id: bold; source: "assets/fonts/NotoSans-Bold.ttf" }
 
 	property real circleDistanceFromCorner: 0.5
 	property int maxColumnGame: 4
@@ -78,11 +76,36 @@ FocusScope {
 		}
 	}
 	
+	// Dynamic game background — crossfades when the selected game changes
+	property var currentGame: api.collections.get(0).games.get(radialMenu.currentIndex)
+	property string gameBackground: {
+		if (!currentGame) return "assets/images/test.png";
+		return currentGame.assets.background
+			|| currentGame.assets.screenshot
+			|| "assets/images/test.png";
+	}
+
 	Image {
-		id: hello
-		source: "assets/images/test.png"
+		id: backgroundImage
 		anchors.fill: parent
-		fillMode: Image.PreserveAspectFit
+		fillMode: Image.PreserveAspectCrop
+		source: root.gameBackground
+		asynchronous: true
+		
+		Behavior on source {
+			SequentialAnimation {
+				PropertyAction { target: backgroundFade; property: "opacity"; value: 1 }
+				NumberAnimation { target: backgroundFade; property: "opacity"; to: 0; duration: 400; easing.type: Easing.InOutQuad }
+			}
+		}
+	}
+
+	// Overlay that fades out to reveal the new background
+	Rectangle {
+		id: backgroundFade
+		anchors.fill: parent
+		color: "white"
+		opacity: 0
 	}
 
 	// Image {
@@ -96,8 +119,39 @@ FocusScope {
 	// 	color: "white"
 	// }
 
-    AnimatedRings {}
+    AnimatedRings {
+        wheelVisualIndex: radialMenu.visualIndex
+        wheelItemCount: radialMenu.model ? radialMenu.model.count : 1
+        gameIndex: radialMenu.currentIndex
+    }
+	FontLoader { 
+		id: fredoka
+		source: Qt.resolvedUrl("assets/images/Fredoka-Regular.ttf")
+	}
+	FontLoader { 
+		id: lilitaOne; 
+		source: Qt.resolvedUrl("assets/images/LilitaOne-Regular.ttf")
+	}
 
+    GameDetailsView {
+        id: gameDetails
+        property var game: api.collections.get(0).games.get(radialMenu.currentIndex)
+        
+        text: game ? game.title : "Game Title"
+        dateText: game && game.release ? (game.release.getFullYear ? game.release.getFullYear() : "2026") : "2026"
+        descriptionText: game && game.description ? game.description : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+        authors: game && game.developer ? game.developer.split(",") : ["Developer", "Developer", "Developer"]
+        tags: game && game.genreList && game.genreList.length > 0 ? game.genreList.toString().split(",") : ["Tag 1", "Tag 2", "Tag 3"]
+        
+        titleFamily: fredoka.name
+		descriptionFamily: lilitaOne.name
+        
+        width: 750
+        anchors.right: parent.right
+        anchors.rightMargin: 75
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+    }
 
 	RadialGameMenu{
 		id: radialMenu
@@ -120,8 +174,8 @@ FocusScope {
         // Opacity tuning
         selectedOpacity: 1.0
         unselectedOpacity: 0.42
-		wheelVelocity: 6
-		wheelMaxEasingTime: 100
+		wheelVelocity: 2.5
+		wheelMaxEasingTime: 600
 
         onCurrentIndexChangedByUser: function(index) {
             api.memory.set("radialIndex", index)

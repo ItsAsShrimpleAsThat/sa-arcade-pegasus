@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtGraphicalEffects 1.15
 
 FocusScope {
     id: root
@@ -8,11 +9,16 @@ FocusScope {
 
     property int currentIndex: 0
 
-    // Unwrapped target position of the wheel
-    property real targetVisualIndex: currentIndex
+    // Unwrapped target position of the wheel (initialized in onCompleted, NOT bound)
+    property real targetVisualIndex: 0
 
     // Actual animated visual position
-    property real visualIndex: currentIndex
+    property real visualIndex: 0
+
+    Component.onCompleted: {
+        targetVisualIndex = currentIndex;
+        visualIndex = currentIndex;
+    }
 
     property real selectedAngleDegrees: 270
 
@@ -238,22 +244,45 @@ FocusScope {
                 }
             }
 
+            
+
             Rectangle {
                 anchors.fill: parent
                 radius: width * 0.12
                 color: selected ? "#2b2f3a" : "#171a22"
                 border.width: selected ? Math.max(2, root.width * 0.0015) : 0
                 border.color: "white"
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    transparentBorder: true
+                    color: "#cc000000"
+                    radius: 20
+                    samples: 33
+                }
             }
 
             Image {
+                id: gameImg
                 anchors.fill: parent
-                anchors.margins: width * 0.07
-                fillMode: Image.PreserveAspectFit
+                fillMode: Image.PreserveAspectCrop
                 smooth: true
                 asynchronous: true
                 source: root.gameImage(modelData)
+                visible: false
+                
             }
+
+            OpacityMask {
+                anchors.fill: gameImg
+                source: gameImg
+                maskSource: Rectangle {
+                    width: gameImg.width
+                    height: gameImg.height
+                    radius: gameImg.width * 0.12
+                }
+            }
+
+            
 
             MouseArea {
                 anchors.fill: parent
