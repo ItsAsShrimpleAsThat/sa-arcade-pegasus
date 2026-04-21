@@ -126,12 +126,14 @@ FocusScope {
     }
 	FontLoader { 
 		id: fredoka
-		source: Qt.resolvedUrl("assets/images/Fredoka-Regular.ttf")
+		source: "assets/images/Fredoka-Bold.ttf"
 	}
 	FontLoader { 
-		id: lilitaOne; 
-		source: Qt.resolvedUrl("assets/images/LilitaOne-Regular.ttf")
+		id: lilitaOne
+		source: "assets/images/LilitaOne-Regular.ttf"
 	}
+	// Debug: uncomment to see font load status on screen
+	// Text { text: "F:" + fredoka.status + " L:" + lilitaOne.status; color: "red"; font.pixelSize: 30; z: 999 }
 
     GameDetailsView {
         id: gameDetails

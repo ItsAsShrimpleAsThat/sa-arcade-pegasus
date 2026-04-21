@@ -296,14 +296,24 @@ Item {
                 }
             }
 
-            // --- Normal idle scroll ---
+            // --- Normal idle scroll (manual loop to avoid snap-back) ---
             PropertyAnimation {
                 id: scrollAnim
                 target: scrollTarget
                 property: "y"
-                loops: Animation.Infinite
+                loops: 1
                 running: false
                 easing.type: Easing.Linear
+                onStopped: {
+                    // Seamlessly reset to top and restart — no visible jump
+                    scrollTarget.y = 0;
+                    scrollAnim.from = 0;
+                    var h = cycleBlock.height + 20;
+                    if (h <= 20) h = 300;
+                    scrollAnim.to = -h;
+                    scrollAnim.duration = Math.max(1000, h * 15);
+                    scrollAnim.start();
+                }
             }
 
             // --- Phase 2: fast entry — rockets new tags in from bottom right behind old ones ---

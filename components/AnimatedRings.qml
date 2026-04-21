@@ -112,7 +112,6 @@ Item {
         id: bubblesMaskGreen
         anchors.fill: glowBackground21
         visible: false
-        Behavior on opacity { NumberAnimation { duration: 300 } }
         Repeater {
             model: 45
             Rectangle {
@@ -122,6 +121,9 @@ Item {
                 color: "black"
                 x: ((Math.cos(index * 7 + root.seed) + 1) / 2) * parent.width
                 y: ((Math.sin(index * 3 + root.seed) + 1) / 2) * parent.height
+                Behavior on x { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                Behavior on y { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                Behavior on width { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
             }
         }
     }
@@ -130,7 +132,6 @@ Item {
         id: bubblesMaskGold
         anchors.fill: glowBackground22
         visible: false
-        Behavior on opacity { NumberAnimation { duration: 300 } }
         Repeater {
             model: 35
             Rectangle {
@@ -140,6 +141,9 @@ Item {
                 color: "black"
                 x: ((Math.sin(index * 11 + root.seed) + 1) / 2) * parent.width
                 y: ((Math.cos(index * 2 + root.seed) + 1) / 2) * parent.height
+                Behavior on x { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                Behavior on y { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                Behavior on width { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
             }
         }
     }
@@ -156,10 +160,13 @@ Item {
         maskSource: bubblesMaskGold
     }
 
+    // Use the smaller dimension to keep all rings as perfect circles
+    property real ringBase: Math.min(parent.width, parent.height)
+
     Shape {
         id: outerRingContainer
-        width: parent.width *1.5
-        height: parent.height *1.5
+        width: root.ringBase * 1.5
+        height: root.ringBase * 1.5
         x: -width / 2
         y: -height / 2
         antialiasing: false
@@ -220,8 +227,8 @@ Item {
 
     Shape {
         id: middleRingContainer
-        width: parent.width *0.8
-        height: parent.width *0.8
+        width: root.ringBase * 1.275
+        height: root.ringBase * 1.275
         x: -width / 2
         y: -height / 2
         antialiasing: false
@@ -276,8 +283,8 @@ Item {
 
     Shape {
         id: ringContainer
-        width: parent.width *1.05
-        height: parent.height *1.05
+        width: root.ringBase * 1.05
+        height: root.ringBase * 1.05
         x: -width / 2
         y: -height / 2 // This centers it perfectly
         antialiasing: false
