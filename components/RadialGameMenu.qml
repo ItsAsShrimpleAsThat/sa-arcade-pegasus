@@ -207,6 +207,7 @@ FocusScope {
         model: root.model ? root.model : 0
 
         delegate: Item {
+            id: gameItem
             property int total: root.modelCount()
             property bool selected: index === root.visualSelectedIndex
 
@@ -222,8 +223,13 @@ FocusScope {
             width: root.baseItemSize
             height: root.baseItemSize
 
-            x: root.centerX + Math.cos(angle) * root.radius - width / 2
-            y: root.centerY + Math.sin(angle) * root.radius - height / 2
+            property real funWigglesX: 0
+            property real funWigglesY: 0
+            property real funWigglesRotation: Math.random() * 10 - 5
+
+            x: root.centerX + Math.cos(angle) * root.radius - width / 2 + funWigglesX
+            y: root.centerY + Math.sin(angle) * root.radius - height / 2 + funWigglesY
+            rotation: funWigglesRotation
 
             scale: selected ? root.selectedScale : root.unselectedScale
             opacity: selected ? root.selectedOpacity : root.unselectedOpacity
@@ -294,6 +300,61 @@ FocusScope {
                 onDoubleClicked: {
                     root.setCurrentIndex(index);
                     root.activateCurrentGame();
+                }
+            }
+
+            property real wiggleAmount: 10
+            property real wiggleAmountRotation: 2.5
+            SequentialAnimation on funWigglesX {
+                id: xWiggle
+                loops: Animation.Infinite
+                running: true
+
+                NumberAnimation {
+                    to: wiggleAmount
+                    duration: 5400
+                    easing.type: Easing.InOutSine
+                }
+
+                NumberAnimation {
+                    to: -wiggleAmount
+                    duration: 6400
+                    easing.type: Easing.InOutSine
+                }
+            }
+
+            SequentialAnimation on funWigglesY {
+                loops: Animation.Infinite
+                running: true
+
+                NumberAnimation {
+                    to: wiggleAmount
+                    duration: 5600
+                    easing.type: Easing.InOutSine
+                }
+
+                NumberAnimation {
+                    to: -wiggleAmount
+                    duration: 6000
+                    easing.type: Easing.InOutSine
+                }
+            }
+
+            SequentialAnimation on funWigglesRotation {
+                id: rotationWiggle
+                loops: Animation.Infinite
+                running: true
+
+                NumberAnimation {
+                    to: wiggleAmountRotation
+                    duration: 4000
+                    easing.type: Easing.InOutSine
+                }
+
+                NumberAnimation {
+                    to: -wiggleAmountRotation
+                    duration: 4000
+                    easing.type: Easing.InOutSine
                 }
             }
         }
