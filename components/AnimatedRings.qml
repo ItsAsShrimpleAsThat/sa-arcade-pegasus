@@ -14,6 +14,7 @@ Item {
     property real autoRotationFWD: 0
     property real autoRotationBWD: 360
     
+    
     NumberAnimation on autoRotationFWD {
         from: 0
         to: 360
@@ -108,6 +109,17 @@ Item {
     property real seed: 123.456
     onGameIndexChanged: seed = Math.random() * 1000
 
+    property real time: 0
+    NumberAnimation {
+        target: root
+        property: "time"
+        from: 0
+        to: 628.3185
+        duration: 60000 // Slightly slower, more graceful
+        loops: Animation.Infinite
+        running: true
+    }
+
     Item {
         id: bubblesMaskGreen
         anchors.fill: glowBackground21
@@ -115,15 +127,28 @@ Item {
         Repeater {
             model: 45
             Rectangle {
-                width: (Math.sin(index + root.seed) + 1) * 60 + 20
+                property real seedX: Math.cos(index * 7 + root.seed)
+                property real seedY: Math.sin(index * 3 + root.seed)
+                property real seedSize: Math.sin(index + root.seed)
+
+                property real animX: Math.cos(index * 1.2 + root.time * 0.12) * 15
+                property real animY: Math.sin(index * 1.2 + root.time * 0.12) * 15
+                property real animSize: Math.sin(index * 0.4 + root.time * 0.15) * 6
+
+                width: Math.max(5, ((seedSize + 1) * 60 + 20) + animSize)
                 height: width
                 radius: width / 2
                 color: "black"
-                x: ((Math.cos(index * 7 + root.seed) + 1) / 2) * parent.width
-                y: ((Math.sin(index * 3 + root.seed) + 1) / 2) * parent.height
-                Behavior on x { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
-                Behavior on y { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
-                Behavior on width { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                
+                property real targetX: ((seedX + 1) / 2) * parent.width
+                property real targetY: ((seedY + 1) / 2) * parent.height
+                
+                Behavior on targetX { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+                Behavior on targetY { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+                Behavior on width { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+
+                x: targetX + animX
+                y: targetY + animY
             }
         }
     }
@@ -135,15 +160,28 @@ Item {
         Repeater {
             model: 35
             Rectangle {
-                width: (Math.cos(index * 5 + root.seed) + 1) * 40 + 15
+                property real seedX: Math.sin(index * 11 + root.seed)
+                property real seedY: Math.cos(index * 2 + root.seed)
+                property real seedSize: Math.cos(index * 5 + root.seed)
+
+                property real animX: Math.sin(index * 1.8 + root.time * 0.1) * 12
+                property real animY: Math.cos(index * 1.8 + root.time * 0.1) * 12
+                property real animSize: Math.cos(index * 0.6 + root.time * 0.12) * 4
+
+                width: Math.max(5, ((seedSize + 1) * 40 + 15) + animSize)
                 height: width
                 radius: width / 2
                 color: "black"
-                x: ((Math.sin(index * 11 + root.seed) + 1) / 2) * parent.width
-                y: ((Math.cos(index * 2 + root.seed) + 1) / 2) * parent.height
-                Behavior on x { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
-                Behavior on y { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
-                Behavior on width { NumberAnimation { duration: 800; easing.type: Easing.InOutQuad } }
+                
+                property real targetX: ((seedX + 1) / 2) * parent.width
+                property real targetY: ((seedY + 1) / 2) * parent.height
+                
+                Behavior on targetX { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+                Behavior on targetY { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+                Behavior on width { NumberAnimation { duration: 1200; easing.type: Easing.InOutCubic } }
+
+                x: targetX + animX
+                y: targetY + animY
             }
         }
     }

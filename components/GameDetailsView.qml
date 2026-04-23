@@ -306,13 +306,16 @@ Item {
                 easing.type: Easing.Linear
                 onStopped: {
                     // Seamlessly reset to top and restart — no visible jump
-                    scrollTarget.y = 0;
-                    scrollAnim.from = 0;
-                    var h = cycleBlock.height + 20;
-                    if (h <= 20) h = 300;
-                    scrollAnim.to = -h;
-                    scrollAnim.duration = Math.max(1000, h * 15);
-                    scrollAnim.start();
+                    // ONLY reset if we actually reached the bottom of the loop (not if stopped by a flush)
+                    if (Math.abs(scrollTarget.y - scrollAnim.to) < 2.0) {
+                        scrollTarget.y = 0;
+                        scrollAnim.from = 0;
+                        var h = cycleBlock.height + 20;
+                        if (h <= 20) h = 300;
+                        scrollAnim.to = -h;
+                        scrollAnim.duration = Math.max(1000, h * 15);
+                        scrollAnim.start();
+                    }
                 }
             }
 
@@ -371,8 +374,12 @@ Item {
             Connections {
                 target: root
                 function onTagsChanged() {
+                    // Stop idle scroll without triggering its onStopped reset logic
+                    var oldY = scrollTarget.y;
                     scrollAnim.stop();
                     entryAnim.stop();
+                    scrollTarget.y = oldY; // Re-lock position to avoid any potential jump from stop()
+
                     // Blast current position upward off the top at full speed
                     flushAnim.from = scrollTarget.y;
                     flushAnim.to = -(cycleBlock.height + tagsContainer.height);
