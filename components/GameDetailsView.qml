@@ -24,7 +24,7 @@ Item {
     property var tags: ["Arcade", "Groundhog (Hedgehog)", "Singleplayer"]
 
     // --- Styling & Theming ---
-    property color textColor: "black"
+    property color textColor: "white"
     property color mainLineColor: "#094020"
     property color accentLineColor: "#A4A4A4"
     property color dateColor: "#c28710"
@@ -42,7 +42,7 @@ Item {
 
     // Automatically construct formatted rich-text credits
     property string creditsText: {
-        var str = "<b>By:</b> ";
+        var str = "";
         if (!root.authors) return "";
         for (var i = 0; i < root.authors.length; i++) {
             var c = String((i % 2 === 0) ? root.mainLineColor : root.dateColor); 
@@ -179,7 +179,7 @@ Item {
             Text {
                 anchors.centerIn: parent
                 text: "Play"
-                color: "white"
+                color: textColor
                 font.family: root.descriptionFamily
                 font.pixelSize: 60
                 font.weight: Font.Black
@@ -211,7 +211,7 @@ Item {
                 font.family: root.descriptionFamily
                 font.pixelSize: root.descriptionFontSize
                 font.weight: Font.Medium
-                color: "black"
+                color: textColor
                 wrapMode: Text.WordWrap
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignTop
@@ -252,7 +252,7 @@ Item {
                             width: 44
                             height: Math.max(80, tagText.implicitWidth + 40)
                             radius: 22
-                            color: "white"
+                            color: "black"
                             border.color: index % 2 === 0 ? root.mainLineColor : root.dateColor
                             border.width: 5
                             Text {
@@ -260,7 +260,7 @@ Item {
                                 anchors.centerIn: parent
                                 rotation: -90
                                 text: modelData
-                                color: "black"
+                                color: textColor
                                 font.family: root.descriptionFamily
                                 font.weight: Font.Black
                                 font.pixelSize: 18
@@ -278,7 +278,7 @@ Item {
                         // Use repTagText as reference to avoid any overlap
                         height: Math.max(80, repTagText.implicitWidth + 40)
                         radius: 22
-                        color: "white"
+                        color: "black"
                         // Since cycleTags always has an EVEN length now, `index % 2` perfectly alternates strictly forever
                         border.color: index % 2 === 0 ? root.mainLineColor : root.dateColor
                         border.width: 5
@@ -287,7 +287,7 @@ Item {
                             anchors.centerIn: parent
                             rotation: -90
                             text: tagsContainer.cycleTags[parent.tagIndex]
-                            color: "black"
+                            color: textColor
                             font.family: root.descriptionFamily
                             font.weight: Font.Black
                             font.pixelSize: 18

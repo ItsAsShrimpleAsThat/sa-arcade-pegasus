@@ -40,10 +40,10 @@ Item {
         
         gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: '#60ffffff' }
-            GradientStop { position: 0.23; color: '#80ffffff' }
-            GradientStop { position: 0.3; color: '#d9ffffff' }
-            GradientStop { position: 1; color: '#d9ffffff' }
+            GradientStop { position: 0.2; color: '#60000000' }
+            GradientStop { position: 0.23; color: '#80000000' }
+            GradientStop { position: 0.3; color: '#d9000000' }
+            GradientStop { position: 1; color: '#d9000000' }
         }
     }
 
@@ -98,10 +98,10 @@ Item {
             orientation: Gradient.Horizontal 
 
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: '#30ffffff' }
-            GradientStop { position: 0.23; color: '#50ffffff' }
-            GradientStop { position: 0.3; color: '#70ffffff' }
-            GradientStop { position: 1; color: '#90ffffff' }
+            GradientStop { position: 0.2; color: '#30000000' }
+            GradientStop { position: 0.23; color: '#50000000' }
+            GradientStop { position: 0.3; color: '#70000000' }
+            GradientStop { position: 1; color: '#90000000' }
         }
     }
 

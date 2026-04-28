@@ -255,9 +255,9 @@ FocusScope {
             Rectangle {
                 anchors.fill: parent
                 radius: width * 0.12
-                color: selected ? "#2b2f3a" : "#171a22"
-                border.width: selected ? Math.max(2, root.width * 0.0015) : 0
-                border.color: "white"
+                color: selected ? '#000000' : '#000000'
+                // border.width: selected ? Math.max(2, root.width * 0.0015) : 0
+                // border.color: "white"
                 layer.enabled: true
                 layer.effect: DropShadow {
                     transparentBorder: true
@@ -271,7 +271,7 @@ FocusScope {
                 id: gameImg
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                smooth: true
+                smooth: false
                 asynchronous: true
                 source: root.gameImage(modelData)
                 visible: false
