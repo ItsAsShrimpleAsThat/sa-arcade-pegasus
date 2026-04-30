@@ -8,6 +8,7 @@ Item {
 
     property real wheelVisualIndex: 0
     property int wheelItemCount: 1
+    property bool isDarkTheme: true
     
     property real baseWheelRotation: -(wheelVisualIndex * (360 / Math.max(1, wheelItemCount)))
 
@@ -40,10 +41,10 @@ Item {
         
         gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: '#60000000' }
-            GradientStop { position: 0.23; color: '#80000000' }
-            GradientStop { position: 0.3; color: '#d9000000' }
-            GradientStop { position: 1; color: '#d9000000' }
+            GradientStop { position: 0.2; color: root.isDarkTheme ? '#60000000' : '#60ffffff' }
+            GradientStop { position: 0.23; color: root.isDarkTheme ? '#80000000' : '#80ffffff' }
+            GradientStop { position: 0.3; color: root.isDarkTheme ? '#d9000000' : '#d9ffffff' }
+            GradientStop { position: 1; color: root.isDarkTheme ? '#d9000000' : '#d9ffffff' }
         }
     }
 
@@ -60,10 +61,10 @@ Item {
             orientation: Gradient.Horizontal 
 
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: '#08094020' }
-            GradientStop { position: 0.23; color: '#16094020' }
-            GradientStop { position: 0.3; color: '#23094020' }
-            GradientStop { position: 1; color: '#3c094020' }
+            GradientStop { position: 0.2; color: root.isDarkTheme ? '#08117a3d' : '#08094020' }
+            GradientStop { position: 0.23; color: root.isDarkTheme ? '#16117a3d' : '#16094020' }
+            GradientStop { position: 0.3; color: root.isDarkTheme ? '#23117a3d' : '#23094020' }
+            GradientStop { position: 1; color: root.isDarkTheme ? '#3c117a3d' : '#3c094020' }
         }
     }
     Rectangle {
@@ -98,10 +99,10 @@ Item {
             orientation: Gradient.Horizontal 
 
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 0.2; color: '#30000000' }
-            GradientStop { position: 0.23; color: '#50000000' }
-            GradientStop { position: 0.3; color: '#70000000' }
-            GradientStop { position: 1; color: '#90000000' }
+            GradientStop { position: 0.2; color: root.isDarkTheme ? '#30000000' : '#30ffffff' }
+            GradientStop { position: 0.23; color: root.isDarkTheme ? '#50000000' : '#50ffffff' }
+            GradientStop { position: 0.3; color: root.isDarkTheme ? '#70000000' : '#70ffffff' }
+            GradientStop { position: 1; color: root.isDarkTheme ? '#90000000' : '#90ffffff' }
         }
     }
 

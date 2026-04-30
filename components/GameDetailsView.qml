@@ -23,11 +23,16 @@ Item {
     property string descriptionText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     property var tags: ["Arcade", "Groundhog (Hedgehog)", "Singleplayer"]
 
+    property bool isDarkTheme: true
+
     // --- Styling & Theming ---
-    property color textColor: "white"
-    property color mainLineColor: "#094020"
+    property color textColor: isDarkTheme ? "white" : "black"
+    property color mainLineColor: isDarkTheme ? "#117a3d" : "#094020"
     property color accentLineColor: "#A4A4A4"
     property color dateColor: "#c28710"
+
+    Behavior on textColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
+    Behavior on mainLineColor { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
     property string titleFamily: ""
     property string descriptionFamily: ""
     
@@ -252,7 +257,8 @@ Item {
                             width: 44
                             height: Math.max(80, tagText.implicitWidth + 40)
                             radius: 22
-                            color: "black"
+                            color: root.isDarkTheme ? "black" : "white"
+                            Behavior on color { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
                             border.color: index % 2 === 0 ? root.mainLineColor : root.dateColor
                             border.width: 5
                             Text {
@@ -278,7 +284,8 @@ Item {
                         // Use repTagText as reference to avoid any overlap
                         height: Math.max(80, repTagText.implicitWidth + 40)
                         radius: 22
-                        color: "black"
+                        color: root.isDarkTheme ? "black" : "white"
+                        Behavior on color { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
                         // Since cycleTags always has an EVEN length now, `index % 2` perfectly alternates strictly forever
                         border.color: index % 2 === 0 ? root.mainLineColor : root.dateColor
                         border.width: 5

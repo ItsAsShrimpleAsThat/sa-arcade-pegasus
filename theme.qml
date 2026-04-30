@@ -76,8 +76,30 @@ FocusScope {
 		}
 	}
 	
-	// Dynamic game background — crossfades when the selected game changes
 	property var currentGame: api.collections.get(0).games.get(radialMenu.currentIndex)
+	
+	property bool isDarkTheme: {
+		if (!currentGame) return true;
+
+		// Check genre tags first as a reliable fallback
+		if (currentGame.genreList) {
+			for (var i = 0; i < currentGame.genreList.length; i++) {
+				if (currentGame.genreList[i].toLowerCase().indexOf("light theme") !== -1) return false;
+				if (currentGame.genreList[i].toLowerCase().indexOf("dark theme") !== -1) return true;
+			}
+		}
+
+		// Pegasus converts asset values to file URLs (e.g., 'file:///.../light')
+		// We extract the last part of the path to get the actual string value
+		var xTheme = String(currentGame.assets["x-theme"] || "");
+		var normalTheme = String(currentGame.assets["theme"] || "");
+		
+		if (xTheme.match(/light$/i) || normalTheme.match(/light$/i)) return false;
+		if (xTheme.match(/dark$/i) || normalTheme.match(/dark$/i)) return true;
+
+		return true; // Default to dark theme
+	}
+
 	property string gameBackground: {
 		if (!currentGame) return "assets/images/test.png";
 		return currentGame.assets.background
@@ -104,7 +126,8 @@ FocusScope {
 	Rectangle {
 		id: backgroundFade
 		anchors.fill: parent
-		color: "white"
+		color: root.isDarkTheme ? "black" : "white"
+		Behavior on color { ColorAnimation { duration: 400; easing.type: Easing.InOutQuad } }
 		opacity: 0
 	}
 
@@ -123,6 +146,7 @@ FocusScope {
         wheelVisualIndex: radialMenu.visualIndex
         wheelItemCount: radialMenu.model ? radialMenu.model.count : 1
         gameIndex: radialMenu.currentIndex
+        isDarkTheme: root.isDarkTheme
     }
 	FontLoader { 
 		id: fredoka
@@ -134,16 +158,46 @@ FocusScope {
 	}
 	// Debug: uncomment to see font load status on screen
 	// Text { text: "F:" + fredoka.status + " L:" + lilitaOne.status; color: "red"; font.pixelSize: 30; z: 999 }
+    
+    // Text {
+    //     text: {
+    //         var str = "";
+    //         for (var i = 0; i < api.collections.count; i++) {
+    //             str += "Coll " + i + ": " + api.collections.get(i).name + " (" + api.collections.get(i).games.count + ")\n";
+    //         }
+    //         str += "Current: " + (currentGame ? currentGame.title : "none") + "\n";
+    //         if (currentGame) {
+    //             str += "Asset Keys: " + Object.keys(currentGame.assets).join(", ") + "\n";
+    //             str += "Tags: " + currentGame.genreList.join(", ") + "\n";
+    //             var xThemeUrl = currentGame.assets["x-theme"];
+    //             var themeUrl = currentGame.assets["theme"];
+    //             var extractedTheme = "none";
+    //             if (xThemeUrl) extractedTheme = String(xThemeUrl).split('/').pop();
+    //             else if (themeUrl) extractedTheme = String(themeUrl).split('/').pop();
+                
+    //             str += "x-theme: " + (xThemeUrl !== undefined ? xThemeUrl : "undefined") + "\n";
+    //             str += "theme: " + (themeUrl !== undefined ? themeUrl : "undefined") + "\n";
+    //             str += "Parsed Theme: " + extractedTheme;
+    //         }
+    //         return str;
+    //     }
+    //     color: "magenta"
+    //     font.pixelSize: 20
+    //     z: 1000
+    //     anchors.centerIn: parent
+    //     horizontalAlignment: Text.AlignHCenter
+    // }
 
     GameDetailsView {
         id: gameDetails
         property var game: api.collections.get(0).games.get(radialMenu.currentIndex)
+        isDarkTheme: root.isDarkTheme
         
         text: game ? game.title : "Game Title"
         dateText: game && game.release ? (game.release.getFullYear ? game.release.getFullYear() : "2026") : "2026"
         descriptionText: game && game.description ? game.description : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         authors: game && game.developer ? game.developer.split(",") : ["Developer", "Developer", "Developer"]
-        tags: game && game.genreList && game.genreList.length > 0 ? game.genreList.toString().split(",") : ["Tag 1", "Tag 2", "Tag 3"]
+        tags: game && game.genreList && game.genreList.length > 0 ? game.genreList.toString().split(",").filter(tag => !tag.includes("Theme")) : ["Tag 1", "Tag 2", "Tag 3"]
         
         titleFamily: fredoka.name
 		descriptionFamily: lilitaOne.name
